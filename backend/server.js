@@ -1,11 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const db = require('./mongo');
-const Product = require('./productModel'); // Додайте шлях до вашого файлу з моделлю
+const Product = require('./productModel');
 
 const app = express();
 app.use(express.json());
 
+// Підключення до бази даних
+mongoose.connect('mongodb+srv://YuraRo:div9hE0WPJ9wu7VA@hozhyy.aghpykj.mongodb.net/?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Отримання об'єкта підключення
+const db = mongoose.connection;
+
+// Обробка подій підключення
+db.on('error', console.error.bind(console, 'Connection error:'));
+db.once('open', () => {
+  console.log('Connected to the database');
+});
+
+// Отримати всі продукти
 // Отримати всі продукти
 app.get('/api/products', async (req, res) => {
   try {
@@ -17,11 +32,12 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+
 // Створити новий продукт
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, price, description } = req.body;
-    const newProduct = new Product({ name, price, description });
+    const { id, image, title, category, price } = req.body;
+    const newProduct = new Product({ id, image, title, category, price });
     const savedProduct = await newProduct.save();
     res.json(savedProduct);
   } catch (error) {
@@ -30,7 +46,9 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+

@@ -1,21 +1,15 @@
+// api.js
 import axios from 'axios';
 
-// Приклад GET-запиту
-axios.get('/api/products')
-  .then(response => {
-    console.log(response.data);
-    // Тут можна виконати щось з отриманими даними
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-  });
+const API_URL = 'http://localhost:3000/api/products';
 
-// Приклад POST-запиту
-axios.post('/api/products', { name: 'New Product' })
-  .then(response => {
-    console.log(response.data);
-    // Тут можна виконати щось з отриманими даними
-  })
-  .catch(error => {
-    console.error('Error posting data:', error);
-  });
+export const fetchProducts = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error; // Прокидуємо помилку для обробки її в компоненті React
+  }
+};
+
