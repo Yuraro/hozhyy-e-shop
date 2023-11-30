@@ -1,18 +1,17 @@
-// ProductsList.jsx
-import React, { useEffect, useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import { fetchProducts } from './service';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productsData = await fetchProducts();
-        setProducts(productsData);
+        const data = await fetchProducts();
+        setProducts(data);
       } catch (error) {
-        setError(error.message);
+        console.error('Error fetching products:', error);
       }
     };
 
@@ -21,22 +20,17 @@ const ProductsList = () => {
 
   return (
     <div>
-      <h1>Products List</h1>
-      {error ? (
-        <p>Error fetching data: {error}</p>
-      ) : (
-        <ul>
-          {products.map((product) => (
-            <li key={product.id}>
-              <h3>{product.title}</h3>
-              <p>Category: {product.category}</p>
-              <p>Price: {product.price}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <h1>Products</h1>
+      <ul>
+        {products.map((product) => (
+        <li key={product._id}>{product.name}</li>
+      ))}
+      </ul>
     </div>
   );
 };
 
 export default ProductsList;
+
+
+
